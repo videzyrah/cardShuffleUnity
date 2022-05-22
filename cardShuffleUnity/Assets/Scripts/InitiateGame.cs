@@ -6,25 +6,62 @@ using CardShuffle.Assets.Models;
 
 public class InitiateGame : MonoBehaviour
 {
+    public GameObject CardPlaceholderPrefab; //Greg new
     private List<Card> _cards = new List<Card>();
     // Start is called before the first frame update
     void Start()
     {
-        for (var x = 0.0f; x < 51; x++)
+        for (int x = 2; x < 15; x++)
         {
             _cards.Add(
                 new Card(CardType.Club, x.ToString(),
-                    new Vector3(
-                        2f - 20.1f * x, 
-                        2f + 20.1f * x,
-                        2f
-                    )
+                    new Vector3(x, 0.2f , 0)
+                )
+            );
+        }
+        for (int x = 2; x < 15; x++)
+        {
+            _cards.Add(
+                new Card(CardType.Heart, x.ToString(),
+                    new Vector3(x, 0.4f , 0)
+                )
+            );
+        }
+        for (int x = 2; x < 15; x++)
+        {
+            _cards.Add(
+                new Card(CardType.Spade, x.ToString(),
+                    new Vector3(x, 0.6f , 0)
+                )
+            );
+        }
+        for (int x = 2; x < 15; x++)
+        {
+            _cards.Add(
+                new Card(CardType.Diamond, x.ToString(),
+                    new Vector3(x, 0.8f , 0)
                 )
             );
         }
 
+
+
         foreach(var card in _cards) {
-            //Instantiate(CardPlaceholderPrefab, card.CenterPointInSpace, Quaternion.identity);
+            var nextCard = Instantiate(CardPlaceholderPrefab, card.CenterPointInSpace, Quaternion.identity);
+            Debug.Log((int)card.CardType);
+            if ((int)card.CardType == 1){
+               nextCard.GetComponent<CardGreg>().suit = "Club"; 
+            }
+            if ((int)card.CardType == 2){
+               nextCard.GetComponent<CardGreg>().suit = "Heart"; 
+            }
+            if ((int)card.CardType == 3){
+               nextCard.GetComponent<CardGreg>().suit = "Spade"; 
+            }
+            if ((int)card.CardType == 4){
+               nextCard.GetComponent<CardGreg>().suit = "Diamond"; 
+            }
+            nextCard.GetComponent<CardGreg>().value = card.FaceValue;
         } 
     }
 
