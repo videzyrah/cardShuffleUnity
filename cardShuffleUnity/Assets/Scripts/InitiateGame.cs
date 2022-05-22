@@ -8,9 +8,33 @@ public class InitiateGame : MonoBehaviour
 {
     public GameObject CardPlaceholderPrefab; //Greg new
     private List<Card> _cards = new List<Card>();
+    public float i;
+    //public Random _random = new Random();
     // Start is called before the first frame update
-    void Start()
+    public abstract class ShuffleList
     {
+    //Define shuffling algorithm
+      public static List<E> ShuffleListItems<E>(List<E> inputList)
+      {
+        List<E> originalList = new List<E>();
+        originalList.AddRange(inputList);
+        List<E> randomList = new List<E>();
+
+        System.Random r = new System.Random();
+        int randomIndex = 0;
+        while (originalList.Count > 0)
+        {
+            randomIndex = r.Next(0, originalList.Count); //Choose a random object in the list
+            randomList.Add(originalList[randomIndex]); //add it to the new, random list
+            originalList.RemoveAt(randomIndex); //remove to avoid duplicates
+        }
+
+        return randomList; //return the new random list
+      }
+    }
+    void Start()
+    {   
+        //Generate Clubs
         for (int x = 2; x < 15; x++)
         {
             _cards.Add(
@@ -19,6 +43,7 @@ public class InitiateGame : MonoBehaviour
                 )
             );
         }
+        //Generate Hearts
         for (int x = 2; x < 15; x++)
         {
             _cards.Add(
@@ -27,6 +52,7 @@ public class InitiateGame : MonoBehaviour
                 )
             );
         }
+
         for (int x = 2; x < 15; x++)
         {
             _cards.Add(
@@ -44,10 +70,12 @@ public class InitiateGame : MonoBehaviour
             );
         }
 
+        //Shuffle _cards List
+        List<Card> shuffledDeck = ShuffleList.ShuffleListItems<Card>(_cards);
 
-
-        foreach(var card in _cards) {
-            var nextCard = Instantiate(CardPlaceholderPrefab, card.CenterPointInSpace, Quaternion.identity);
+        //Spawn Shuffled Deck into space
+        foreach(var card in shuffledDeck) {
+            var nextCard = Instantiate(CardPlaceholderPrefab, new Vector3(i*0.001f,i*0.025f,0f), Quaternion.identity);
             Debug.Log((int)card.CardType);
             if ((int)card.CardType == 1){
                nextCard.GetComponent<CardGreg>().suit = "Club"; 
@@ -62,6 +90,7 @@ public class InitiateGame : MonoBehaviour
                nextCard.GetComponent<CardGreg>().suit = "Diamond"; 
             }
             nextCard.GetComponent<CardGreg>().value = card.FaceValue;
+            i = i+1f;
         } 
     }
 
@@ -70,4 +99,6 @@ public class InitiateGame : MonoBehaviour
     {
         
     }
+
+
 }
